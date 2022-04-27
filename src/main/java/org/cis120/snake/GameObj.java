@@ -21,8 +21,8 @@ public abstract class GameObj {
     private int py;
 
     /* Size of object, in pixels. */
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
 
     /* Velocity: number of pixels to move every time move() is called. */
     private  int velocity;
@@ -96,6 +96,8 @@ public abstract class GameObj {
     }
 
     public void setVelocity (int newVelocity) {this.velocity = newVelocity;}
+
+    public void changeSize (int newSize) {this.width = newSize; this.height = newSize;}
 
     // **************************************************************************
     // * UPDATES AND OTHER METHODS
@@ -263,4 +265,6 @@ public abstract class GameObj {
      *          etc.)
      */
     public abstract void draw(Graphics g);
+
+    public abstract String fileSaveInfo();
 }

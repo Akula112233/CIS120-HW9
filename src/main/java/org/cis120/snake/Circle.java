@@ -25,4 +25,9 @@ public class Circle extends GameObj {
         g.setColor(this.color);
         g.fillOval(this.getPx(), this.getPy(), this.getWidth(), this.getHeight());
     }
+
+    @Override
+    public String fileSaveInfo() {
+        return getVelocity() + "\n" + getPx() + "," + getPy() + "\n";
+    }
 }

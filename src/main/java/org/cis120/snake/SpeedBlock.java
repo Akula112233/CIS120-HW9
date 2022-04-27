@@ -18,14 +18,27 @@ import java.io.IOException;
 public class SpeedBlock extends EdibleBlock {
     public static final String IMG_FILE = "files/star.png";
     public static final int SIZE = 20;
-    public static final int INIT_POS_X = GameCourt.COURT_WIDTH-(Snake.SIZE / 2);
-    public static final int INIT_POS_Y = GameCourt.COURT_HEIGHT-(Snake.SIZE / 2);
+    public static final int INIT_POS_X = 0;
+    public static final int INIT_POS_Y = 0;
     public static final int INIT_VEL = 0;
 
     private static BufferedImage img;
 
     public SpeedBlock(int courtWidth, int courtHeight) {
-        super(INIT_VEL, INIT_POS_X, INIT_POS_Y, SIZE, SIZE, courtWidth, courtHeight);
+        super(INIT_VEL, INIT_POS_X, INIT_POS_Y, SIZE, courtWidth, courtHeight);
+
+        try {
+            if (img == null) {
+                img = ImageIO.read(new File(IMG_FILE));
+            }
+        } catch (IOException e) {
+            System.out.println("Internal Error:" + e.getMessage());
+        }
+        this.randomizeMove();
+    }
+
+    public SpeedBlock(int courtWidth, int courtHeight, int xPos, int yPos) {
+        super(INIT_VEL, xPos, yPos, SIZE, courtWidth, courtHeight);
 
         try {
             if (img == null) {
@@ -44,5 +57,6 @@ public class SpeedBlock extends EdibleBlock {
     @Override
     public void eatInteraction(Snake snake) {
         snake.increaseSpeed();
+        this.randomizeMove();
     }
 }

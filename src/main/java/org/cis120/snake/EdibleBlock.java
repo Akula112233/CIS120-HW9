@@ -15,21 +15,25 @@ public abstract class EdibleBlock extends GameObj{
      * @param v
      * @param px
      * @param py
-     * @param width
-     * @param height
+     * @param size
      * @param courtWidth
      * @param courtHeight
      */
-    public EdibleBlock(int v, int px, int py, int width, int height, int courtWidth, int courtHeight) {
-        super(v, px, py, width, height, courtWidth, courtHeight);
+    public EdibleBlock(int v, int px, int py, int size, int courtWidth, int courtHeight) {
+        super(v, px, py, size, size, courtWidth, courtHeight);
         this.courtWidth = courtWidth;
         this.courtHeight = courtHeight;
     }
 
     public abstract void eatInteraction (Snake snake);
 
+    @Override
+    public String fileSaveInfo() {
+        return getPx() + "," + getPy();
+    }
+
     protected void randomizeMove() {
-        this.setPx(RandomNum(getWidth() / 2, this.courtWidth + this.getWidth()));
-        this.setPy(RandomNum(getHeight() / 2, this.courtHeight + this.getHeight()));
+        this.setPx(RandomNum(getWidth() / 2 + 10, this.courtWidth - this.getWidth()) - 10);
+        this.setPy(RandomNum(getHeight() / 2 + 10, this.courtHeight - this.getHeight() - 10));
     }
 }

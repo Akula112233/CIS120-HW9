@@ -16,7 +16,22 @@ public class RunSnake implements Runnable {
         // Top-level frame in which game components live.
         // Be sure to change "TOP LEVEL FRAME" to the name of your game
         final JFrame frame = new JFrame("TOP LEVEL FRAME");
-        frame.setLocation(300, 300);
+        frame.setLocation(400, 50);
+
+        Object[] options = {"OK"};
+        String instructionsText = "This game is a play on the original game of snake.\n " +
+                "Use the arrow keys to travel around the board but don't hit walls! \n" +
+                "You can eat the mushroom block and the star block.\n" +
+                "The mushroom block grows your snake's body and the star makes you faster!\n" +
+                "You can press space to pause and save your game at any time.\n" +
+                "Simply press space again to resume play, or exit to take a break!\n" +
+                "When you reopen the game, it will bring up your previous save.\n" +
+                "ENJOY!";
+        JOptionPane.showOptionDialog(null,
+            instructionsText,
+            "Game Instructions",
+            JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+            null, options,options[0]);
 
         // Status panel
         final JPanel status_panel = new JPanel();
@@ -37,8 +52,17 @@ public class RunSnake implements Runnable {
         // ActionListener with its actionPerformed() method overridden. When the
         // button is pressed, actionPerformed() will be called.
         final JButton reset = new JButton("Reset");
-        reset.addActionListener(e -> court.reset());
+        reset.addActionListener(e -> court.reset(true));
         control_panel.add(reset);
+
+/*        //Information Button
+        final JButton informationButton = new JButton("Instructions");
+        reset.addActionListener(e -> JOptionPane.showOptionDialog(null,
+                instructionsText,
+                "Game Instructions",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                null, options,options[0]));
+        control_panel.add(informationButton);*/
 
         // Put the frame on the screen
         frame.pack();
@@ -46,6 +70,6 @@ public class RunSnake implements Runnable {
         frame.setVisible(true);
 
         // Start game
-        court.reset();
+        court.reset(false);
     }
 }
