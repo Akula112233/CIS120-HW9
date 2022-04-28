@@ -57,31 +57,30 @@ public class GameCourt extends JPanel {
 
         addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_LEFT  && playing) {
-                    if(isVertical() && movedOnceAfterChange){
-                        snake.setDirection(Direction.LEFT);
+                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    if (isVertical() && movedOnceAfterChange) {
+                        snake.setDirection(Direction.LEFT, playing);
                         movedOnceAfterChange = false;
                     }
-                } else if (e.getKeyCode() == KeyEvent.VK_RIGHT  && playing) {
-                    if(isVertical() && movedOnceAfterChange){
-                        snake.setDirection(Direction.RIGHT);
+                } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    if (isVertical() && movedOnceAfterChange) {
+                        snake.setDirection(Direction.RIGHT, playing);
                         movedOnceAfterChange = false;
                     }
-                } else if (e.getKeyCode() == KeyEvent.VK_DOWN && playing) {
-                    if(!isVertical() && movedOnceAfterChange){
-                        snake.setDirection(Direction.DOWN);
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    if (!isVertical() && movedOnceAfterChange) {
+                        snake.setDirection(Direction.DOWN, playing);
                         movedOnceAfterChange = false;
                     }
-                } else if (e.getKeyCode() == KeyEvent.VK_UP && playing) {
-                    if(!isVertical() && movedOnceAfterChange){
-                        snake.setDirection(Direction.UP);
+                } else if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    if (!isVertical() && movedOnceAfterChange) {
+                        snake.setDirection(Direction.UP, playing);
                         movedOnceAfterChange = false;
                     }
-                } else if(e.getKeyCode() == KeyEvent.VK_SPACE){
-                    if(playing){
+                } else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                    if (playing) {
                         saveCloseGame();
-                    }
-                    else if (!died){
+                    } else if (!died) {
                         playing = true;
                         tick();
                     }
@@ -104,34 +103,34 @@ public class GameCourt extends JPanel {
             fileWriter.write(speedBlock.fileSaveInfo() + "\n");
             fileWriter.write(snake.fileSaveInfo());
             fileWriter.close();
+            status.setText("Game Saved, Press Space to Resume or Exit the Game!");
         } catch (IOException e) {
-            System.out.println("Unable to Save Game!");
+            status.setText("Unable to Save Game! Press Space to Resume");
         }
         playing = false;
-        status.setText("Game Saved, Press Space to Resume or Exit the Game!");
     }
 
     public void reset(boolean buttonPress) {
-        if(buttonPress){
+        if (buttonPress) {
             noSavedGame();
             return;
         }
         try {
             FileInputStream fis = new FileInputStream("snake-save.bin");
             Scanner scanner = new Scanner(fis);
-            //FoodBlock
+            // FoodBlock
             String[] scannedLine = scanner.nextLine().split(",");
             int xPos = Integer.parseInt(scannedLine[0]);
             int yPos = Integer.parseInt(scannedLine[1]);
             foodBlock = new FoodBlock(COURT_WIDTH, COURT_HEIGHT, xPos, yPos);
 
-            //SpeedBlock
+            // SpeedBlock
             scannedLine = scanner.nextLine().split(",");
             xPos = Integer.parseInt(scannedLine[0]);
             yPos = Integer.parseInt(scannedLine[1]);
             speedBlock = new SpeedBlock(COURT_WIDTH, COURT_HEIGHT, xPos, yPos);
 
-            //Snake - velocity, direction, size, all snake body coords
+            // Snake - velocity, direction, size, all snake body coords
             int velocity = scanner.nextInt();
             scanner.nextLine();
             int direction = scanner.nextInt();
@@ -145,24 +144,27 @@ public class GameCourt extends JPanel {
                 scannedLine = scanner.nextLine().split(",");
                 xPos = Integer.parseInt(scannedLine[0]);
                 yPos = Integer.parseInt(scannedLine[1]);
-                if(i == 0){
+                if (i == 0) {
                     initX = xPos;
                     initY = yPos;
                 }
-                if(xPos < 0 || xPos > COURT_WIDTH || yPos < 0 || yPos > COURT_HEIGHT){
+                if (xPos < 0 || xPos > COURT_WIDTH || yPos < 0 || yPos > COURT_HEIGHT) {
                     noSavedGame();
                     return;
                 }
                 snakeBody.add(new Pair(xPos, yPos));
             }
-            snake = new Snake(COURT_WIDTH, COURT_HEIGHT, Color.black, velocity, initX,
-                    initY, snakeBody, direction);
+            snake = new Snake(
+                    COURT_WIDTH, COURT_HEIGHT, Color.black, velocity, initX,
+                    initY, snakeBody, direction
+            );
             loadSavedGame();
         } catch (Exception e) {
             status.setText("Unable to load saved game, loading default...");
             noSavedGame();
         }
     }
+
     private void loadSavedGame() {
         playing = true;
         died = false;
@@ -194,21 +196,28 @@ public class GameCourt extends JPanel {
         if (playing) {
             // advance the square and snitch in their current direction.
             status.setText("Length: " + snake.getBodySize() + "   Speed: " + snake.getVelocity());
-            snake.move();
-            if(!movedOnceAfterChange){
+            snake.move(playing);
+            if (!movedOnceAfterChange) {
                 movedOnceAfterChange = true;
             }
-            if(snake.intersects(speedBlock)){
-                speedBlock.eatInteraction(snake);
-                status.setText("Length: " + snake.getBodySize() + "   Speed: " + snake.getVelocity());
-            } else if(snake.intersects(foodBlock)){
-                foodBlock.eatInteraction(snake);
-                status.setText("Length: " + snake.getBodySize() + "   Speed: " + snake.getVelocity());
-            } else if(snake.intersectSelf()){
+            if (snake.intersects(speedBlock)) {
+                speedBlock.eatInteraction(snake, false);
+                status.setText(
+                        "Length: " + snake.getBodySize() + "   Speed: " + snake.getVelocity()
+                );
+            }
+            if (snake.intersects(foodBlock)) {
+                foodBlock.eatInteraction(snake, false);
+                status.setText(
+                        "Length: " + snake.getBodySize() + "   Speed: " + snake.getVelocity()
+                );
+            }
+            if (snake.intersectSelf()) {
                 playing = false;
                 died = true;
                 status.setText("You ate yourself! You lose.");
-            } else if(snake.hitWall() != null){
+            }
+            if (snake.hitWall() != null) {
                 playing = false;
                 died = true;
                 status.setText("You lose!");

@@ -1,9 +1,9 @@
 package org.cis120.snake;
 
-public abstract class EdibleBlock extends GameObj{
+public abstract class EdibleBlock extends GameObj {
 
-    public static int RandomNum(int min, int max){
-        return (int)((Math.random() * (max - min)) + min);
+    public static int RandomNum(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
     }
 
     private final int courtWidth;
@@ -25,15 +25,23 @@ public abstract class EdibleBlock extends GameObj{
         this.courtHeight = courtHeight;
     }
 
-    public abstract void eatInteraction (Snake snake);
+    public abstract void eatInteraction(Snake snake, boolean debug);
 
     @Override
     public String fileSaveInfo() {
         return getPx() + "," + getPy();
     }
 
-    protected void randomizeMove() {
-        this.setPx(RandomNum(getWidth() / 2 + 10, this.courtWidth - this.getWidth()) - 10);
-        this.setPy(RandomNum(getHeight() / 2 + 10, this.courtHeight - this.getHeight() - 10));
+    protected void randomizeMove(boolean debug) {
+        int margin = 10;
+        if (debug) {
+            this.setPx(100 - getWidth());
+            this.setPy(100 - getHeight());
+            return;
+        }
+        this.setPx(RandomNum(getWidth() / 2 + margin, this.courtWidth - this.getWidth()) - margin);
+        this.setPy(
+                RandomNum(getHeight() / 2 + margin, this.courtHeight - this.getHeight() - margin)
+        );
     }
 }

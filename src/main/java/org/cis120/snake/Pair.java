@@ -8,20 +8,22 @@ package org.cis120.snake;
 public class Pair {
     private int xPos;
     private int yPos;
-    public Pair (int x, int y){
+
+    public Pair(int x, int y) {
         xPos = x;
         yPos = y;
     }
 
-    public void moveTo(Pair newPair){
+    public void moveTo(Pair newPair) {
         xPos = newPair.getxPos();
         yPos = newPair.getyPos();
     }
 
-    public int getxPos(){
+    public int getxPos() {
         return xPos;
     }
-    public int getyPos(){
+
+    public int getyPos() {
         return yPos;
     }
 }

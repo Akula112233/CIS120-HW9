@@ -25,7 +25,7 @@ public abstract class GameObj {
     private int height;
 
     /* Velocity: number of pixels to move every time move() is called. */
-    private  int velocity;
+    private int velocity;
 
     private Direction direction = Direction.UP;
 
@@ -66,7 +66,9 @@ public abstract class GameObj {
         return this.py;
     }
 
-    public int getVelocity() {return this.velocity; }
+    public int getVelocity() {
+        return this.velocity;
+    }
 
     public int getWidth() {
         return this.width;
@@ -76,7 +78,9 @@ public abstract class GameObj {
         return this.height;
     }
 
-    public Direction getDirection(){ return this.direction; }
+    public Direction getDirection() {
+        return this.direction;
+    }
 
     // **************************************************************************
     // * SETTERS
@@ -91,13 +95,21 @@ public abstract class GameObj {
         clip();
     }
 
-    public void setDirection(Direction d){
+    public void setDirection(Direction d, boolean playing) {
+        if (!playing) {
+            return;
+        }
         this.direction = d;
     }
 
-    public void setVelocity (int newVelocity) {this.velocity = newVelocity;}
+    public void setVelocity(int newVelocity) {
+        this.velocity = newVelocity;
+    }
 
-    public void changeSize (int newSize) {this.width = newSize; this.height = newSize;}
+    public void changeSize(int newSize) {
+        this.width = newSize;
+        this.height = newSize;
+    }
 
     // **************************************************************************
     // * UPDATES AND OTHER METHODS
@@ -117,7 +129,10 @@ public abstract class GameObj {
      * Moves the object by its velocity. Ensures that the object does not go
      * outside its bounds by clipping.
      */
-    public void move() {
+    public void move(boolean playing) {
+        if (!playing) {
+            return;
+        }
         System.out.println(this.direction);
         switch (this.direction) {
             case UP -> this.py -= this.velocity;

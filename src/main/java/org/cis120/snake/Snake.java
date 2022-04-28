@@ -6,13 +6,15 @@ import java.util.Arrays;
 
 public class Snake extends GameObj {
     public static final int SIZE = 10;
-    public static final int INIT_POS_X = GameCourt.COURT_WIDTH/2-(SIZE / 2);
-    public static final int INIT_POS_Y = GameCourt.COURT_HEIGHT/2-(SIZE / 2);
+    public static final int INIT_POS_X = GameCourt.COURT_WIDTH / 2 - (SIZE / 2);
+    public static final int INIT_POS_Y = GameCourt.COURT_HEIGHT / 2 - (SIZE / 2);
     public static final int INIT_VEL = 10;
 
     private final ArrayList<Pair> snakeBody;
     private int tailXPos;
     private int tailYPos;
+
+    private boolean incrementedSpeed = false;
 
     private final Color color;
 
@@ -30,37 +32,81 @@ public class Snake extends GameObj {
         incrementBody();
     }
 
-    public Snake(int courtWidth, int courtHeight, Color color, int velocity, int initX,
-                 int initY, ArrayList<Pair> snakeBody, int direction) {
+    public Snake(
+            int courtWidth, int courtHeight, Color color, int velocity, int initX,
+            int initY, ArrayList<Pair> snakeBody, int direction
+    ) {
         super(velocity, initX, initY, SIZE, SIZE, courtWidth, courtHeight);
         this.color = color;
         this.tailXPos = snakeBody.get(snakeBody.size() - 1).getxPos();
         this.tailYPos = snakeBody.get(snakeBody.size() - 1).getyPos();
         this.snakeBody = snakeBody;
         switch (direction) {
-            case 1 -> setDirection(Direction.LEFT);
-            case 2 -> setDirection(Direction.UP);
-            case 3 -> setDirection(Direction.RIGHT);
-            default -> setDirection(Direction.DOWN);
+            case 1 -> setDirection(Direction.LEFT, true);
+            case 2 -> setDirection(Direction.UP, true);
+            case 3 -> setDirection(Direction.RIGHT, true);
+            default -> setDirection(Direction.DOWN, true);
         }
     }
-
 
     @Override
     public void draw(Graphics g) {
         g.setColor(this.color);
-        for (Pair snakePiece: snakeBody) {
+        for (Pair snakePiece : snakeBody) {
             System.out.println(snakePiece.getxPos() + ",  " + snakePiece.getyPos());
-            g.fillRect(snakePiece.getxPos(), snakePiece.getyPos(), this.getWidth(), this.getHeight());
+            g.fillRect(
+                    snakePiece.getxPos(), snakePiece.getyPos(), this.getWidth(), this.getHeight()
+            );
         }
     }
 
     @Override
-    public void move () {
-        for (int i = snakeBody.size()-1; i > 0; i--) {
-            snakeBody.get(i).moveTo(snakeBody.get(i-1));
+    public void move(boolean playing) {
+        /*
+         * Pair tempOldBlockPos1 = new Pair(snakeBody.get(0).getxPos(),
+         * snakeBody.get(0).getyPos());;
+         * Pair tempOldBlockPos2 = null;
+         * if(snakeBody.size() > 1){
+         * tempOldBlockPos2 = new Pair(snakeBody.get(1).getxPos(),
+         * snakeBody.get(1).getyPos());
+         * }
+         * for (int i = 1; i < snakeBody.size(); i++) {
+         * Pair newPos = tempOldBlockPos1;
+         * if(incrementedSpeed){
+         * switch (this.getDirection()) {
+         * case UP -> newPos = new Pair(newPos.getxPos(), newPos.getyPos() -
+         * getVelocity());
+         * case DOWN -> newPos = new Pair(newPos.getxPos(), newPos.getyPos() +
+         * getVelocity());
+         * case LEFT -> newPos = new Pair(newPos.getxPos() - getVelocity(),
+         * newPos.getyPos());
+         * case RIGHT -> newPos = new Pair(newPos.getxPos() + getVelocity(),
+         * newPos.getyPos());
+         * default -> {}
+         * }
+         * }
+         * snakeBody.get(i).moveTo(newPos);
+         * tempOldBlockPos1 = new Pair(tempOldBlockPos2.getxPos(),
+         * tempOldBlockPos2.getyPos());
+         * if(i < snakeBody.size() - 1){
+         * tempOldBlockPos2 = new Pair(snakeBody.get(i+1).getxPos(),
+         * snakeBody.get(i+1).getyPos());
+         * }
+         * }
+         * if(incrementedSpeed){
+         * incrementedSpeed = false;
+         * }
+         */
+        if (hitWall() != null || intersectSelf() || !playing) {
+            return;
         }
-        setTail(snakeBody.get(snakeBody.size()-1).getxPos(),snakeBody.get(snakeBody.size()-1).getyPos());
+        for (int i = snakeBody.size() - 1; i > 0; i--) {
+            snakeBody.get(i).moveTo(snakeBody.get(i - 1));
+        }
+        setTail(
+                snakeBody.get(snakeBody.size() - 1).getxPos(),
+                snakeBody.get(snakeBody.size() - 1).getyPos()
+        );
         Pair head = snakeBody.get(0);
         Pair newHead;
         switch (this.getDirection()) {
@@ -80,7 +126,7 @@ public class Snake extends GameObj {
     public void incrementBody() {
         int xPos;
         int yPos;
-        if(snakeBody.size() <= 1){
+        if (snakeBody.size() <= 1) {
             switch (this.getDirection()) {
                 case DOWN -> {
                     xPos = tailXPos;
@@ -95,49 +141,49 @@ public class Snake extends GameObj {
                     yPos = tailYPos;
                 }
             }
-        }
-        else{
-            int secondToLastX = snakeBody.get(snakeBody.size()-2).getxPos();
-            int secondToLastY = snakeBody.get(snakeBody.size()-2).getyPos();
-            if(secondToLastX - tailXPos < 0){ // going left
+        } else {
+            int secondToLastX = snakeBody.get(snakeBody.size() - 2).getxPos();
+            int secondToLastY = snakeBody.get(snakeBody.size() - 2).getyPos();
+            if (secondToLastX - tailXPos < 0) { // going left
                 xPos = tailXPos;
                 yPos = tailYPos;
-            } else if(secondToLastX - tailXPos > 0){ // going right
+            } else if (secondToLastX - tailXPos > 0) { // going right
                 xPos = tailXPos - SIZE;
                 yPos = tailYPos;
-            } else if(secondToLastY - tailYPos < 0){ // going up
+            } else if (secondToLastY - tailYPos < 0) { // going up
                 xPos = tailXPos;
                 yPos = tailYPos;
-            } else { //Going down - (secondToLastY - tailYPos > 0)
+            } else { // Going down - (secondToLastY - tailYPos > 0)
                 xPos = tailXPos;
                 yPos = tailYPos - SIZE;
             }
         }
 
         snakeBody.add(new Pair(xPos, yPos));
-        System.out.print("EHRLEJRLEJT");
     }
 
-    public void setTail(int xPos, int yPos){
+    public void setTail(int xPos, int yPos) {
         tailXPos = xPos;
         tailYPos = yPos;
     }
 
-/*    @Override
-    public boolean intersects(EdibleBlock block) {
-        return (getPx() + getWidth() >= block.getPx()
-                && getPy() + getHeight() >= block.getPy()
-                && block.getPx() + block.getWidth() >= getPx()
-                && block.getPy() + block.getHeight() >= getPy());
-    }*/
+    /*
+     * @Override
+     * public boolean intersects(EdibleBlock block) {
+     * return (getPx() + getWidth() >= block.getPx()
+     * && getPy() + getHeight() >= block.getPy()
+     * && block.getPx() + block.getWidth() >= getPx()
+     * && block.getPy() + block.getHeight() >= getPy());
+     * }
+     */
 
     public boolean intersectSelf() {
-        for (int i = 1; i < snakeBody.size(); i++) {
+        for (int i = 3; i < snakeBody.size(); i++) {
             Pair bodyPiece = snakeBody.get(i);
-            if(getPx() + getWidth() > bodyPiece.getxPos()
+            if (getPx() + getWidth() > bodyPiece.getxPos()
                     && getPy() + getHeight() > bodyPiece.getyPos()
                     && bodyPiece.getxPos() + SIZE > getPx()
-                    && bodyPiece.getyPos() + SIZE > getPy()){
+                    && bodyPiece.getyPos() + SIZE > getPy()) {
                 return true;
             }
         }
@@ -147,11 +193,14 @@ public class Snake extends GameObj {
     public int getBodySize() {
         return snakeBody.size();
     }
+
     public void increaseSpeed() {
-        setVelocity(getVelocity()+1);
+        setVelocity(getVelocity() + 1);
+        incrementedSpeed = true;
     }
+
     @Override
-    public String fileSaveInfo(){
+    public String fileSaveInfo() {
         int direction = 0;
         switch (this.getDirection()) {
             case LEFT -> direction = 1;
@@ -160,7 +209,7 @@ public class Snake extends GameObj {
             default -> direction = 4;
         }
         String toReturn = getVelocity() + "\n" + direction + "\n" + snakeBody.size();
-        for (Pair p: snakeBody) {
+        for (Pair p : snakeBody) {
             toReturn += "\n" + p.getxPos() + "," + p.getyPos();
         }
         return toReturn;

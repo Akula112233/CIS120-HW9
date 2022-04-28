@@ -34,7 +34,7 @@ public class SpeedBlock extends EdibleBlock {
         } catch (IOException e) {
             System.out.println("Internal Error:" + e.getMessage());
         }
-        this.randomizeMove();
+        this.randomizeMove(false);
     }
 
     public SpeedBlock(int courtWidth, int courtHeight, int xPos, int yPos) {
@@ -55,8 +55,8 @@ public class SpeedBlock extends EdibleBlock {
     }
 
     @Override
-    public void eatInteraction(Snake snake) {
+    public void eatInteraction(Snake snake, boolean debug) {
         snake.increaseSpeed();
-        this.randomizeMove();
+        this.randomizeMove(debug);
     }
 }
