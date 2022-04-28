@@ -2,7 +2,6 @@ package org.cis120.snake;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Snake extends GameObj {
     public static final int SIZE = 10;
@@ -42,10 +41,22 @@ public class Snake extends GameObj {
         this.tailYPos = snakeBody.get(snakeBody.size() - 1).getyPos();
         this.snakeBody = snakeBody;
         switch (direction) {
-            case 1 -> setDirection(Direction.LEFT, true);
-            case 2 -> setDirection(Direction.UP, true);
-            case 3 -> setDirection(Direction.RIGHT, true);
-            default -> setDirection(Direction.DOWN, true);
+            case 1: {
+                setDirection(Direction.LEFT, true);
+                break;
+            }
+            case 2: {
+                setDirection(Direction.UP, true);
+                break;
+            }
+            case 3: {
+                setDirection(Direction.RIGHT, true);
+                break;
+            }
+            default: {
+                setDirection(Direction.DOWN, true);
+                break;
+            }
         }
     }
 
@@ -110,11 +121,23 @@ public class Snake extends GameObj {
         Pair head = snakeBody.get(0);
         Pair newHead;
         switch (this.getDirection()) {
-            case UP -> newHead = new Pair(head.getxPos(), head.getyPos() - getVelocity());
-            case DOWN -> newHead = new Pair(head.getxPos(), head.getyPos() + getVelocity());
-            case LEFT -> newHead = new Pair(head.getxPos() - getVelocity(), head.getyPos());
-            case RIGHT -> newHead = new Pair(head.getxPos() + getVelocity(), head.getyPos());
-            default -> {
+            case UP: {
+                newHead = new Pair(head.getxPos(), head.getyPos() - getVelocity());
+                break;
+            }
+            case DOWN: {
+                newHead = new Pair(head.getxPos(), head.getyPos() + getVelocity());
+                break;
+            }
+            case LEFT: {
+                newHead = new Pair(head.getxPos() - getVelocity(), head.getyPos());
+                break;
+            }
+            case RIGHT: {
+                newHead = new Pair(head.getxPos() + getVelocity(), head.getyPos());
+                break;
+            }
+            default: {
                 newHead = head;
             }
         }
@@ -128,15 +151,17 @@ public class Snake extends GameObj {
         int yPos;
         if (snakeBody.size() <= 1) {
             switch (this.getDirection()) {
-                case DOWN -> {
+                case DOWN: {
                     xPos = tailXPos;
                     yPos = tailYPos - SIZE;
+                    break;
                 }
-                case RIGHT -> {
+                case RIGHT: {
                     xPos = tailXPos - SIZE;
                     yPos = tailYPos;
+                    break;
                 }
-                default -> {
+                default: {
                     xPos = tailXPos;
                     yPos = tailYPos;
                 }
@@ -203,10 +228,22 @@ public class Snake extends GameObj {
     public String fileSaveInfo() {
         int direction = 0;
         switch (this.getDirection()) {
-            case LEFT -> direction = 1;
-            case UP -> direction = 2;
-            case RIGHT -> direction = 3;
-            default -> direction = 4;
+            case LEFT: {
+                direction = 1;
+                break;
+            }
+            case UP: {
+                direction = 2;
+                break;
+            }
+            case RIGHT: {
+                direction = 3;
+                break;
+            }
+            default: {
+                direction = 4;
+                break;
+            }
         }
         String toReturn = getVelocity() + "\n" + direction + "\n" + snakeBody.size();
         for (Pair p : snakeBody) {

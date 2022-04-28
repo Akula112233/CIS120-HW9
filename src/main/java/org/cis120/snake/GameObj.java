@@ -135,11 +135,23 @@ public abstract class GameObj {
         }
         System.out.println(this.direction);
         switch (this.direction) {
-            case UP -> this.py -= this.velocity;
-            case DOWN -> this.py += this.velocity;
-            case LEFT -> this.px -= this.velocity;
-            case RIGHT -> this.px += this.velocity;
-            default -> {
+            case UP: {
+                this.py -= this.velocity;
+                break;
+            }
+            case DOWN: {
+                this.py += this.velocity;
+                break;
+            }
+            case LEFT: {
+                this.px -= this.velocity;
+                break;
+            }
+            case RIGHT: {
+                this.px += this.velocity;
+                break;
+            }
+            default: {
             }
         }
     }
@@ -180,17 +192,45 @@ public abstract class GameObj {
         int thatNextY = that.py;
 
         switch (this.direction) {
-            case UP -> thisNextY -= this.velocity;
-            case DOWN -> thisNextY += this.velocity;
-            case LEFT -> thisNextX -= this.velocity;
-            case RIGHT -> thisNextX += this.velocity;
+            case UP: {
+                thisNextY -= this.velocity;
+                break;
+            }
+            case DOWN: {
+                thisNextY += this.velocity;
+                break;
+            }
+            case LEFT: {
+                thisNextX -= this.velocity;
+                break;
+            }
+            case RIGHT: {
+                thisNextX += this.velocity;
+                break;
+            }
+            default: {
+            }
         }
 
         switch (this.direction) {
-            case UP -> thatNextY -= this.velocity;
-            case DOWN -> thatNextY += this.velocity;
-            case LEFT -> thatNextX -= this.velocity;
-            case RIGHT -> thatNextX += this.velocity;
+            case UP: {
+                thatNextY -= this.velocity;
+                break;
+            }
+            case DOWN: {
+                thatNextY += this.velocity;
+                break;
+            }
+            case LEFT: {
+                thatNextX -= this.velocity;
+                break;
+            }
+            case RIGHT: {
+                thatNextX += this.velocity;
+                break;
+            }
+            default: {
+            }
         }
 
         return (thisNextX + this.width >= thatNextX

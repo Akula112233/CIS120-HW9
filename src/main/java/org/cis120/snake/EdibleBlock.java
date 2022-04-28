@@ -2,7 +2,7 @@ package org.cis120.snake;
 
 public abstract class EdibleBlock extends GameObj {
 
-    public static int RandomNum(int min, int max) {
+    public static int randomNum(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
     }
 
@@ -39,9 +39,9 @@ public abstract class EdibleBlock extends GameObj {
             this.setPy(100 - getHeight());
             return;
         }
-        this.setPx(RandomNum(getWidth() / 2 + margin, this.courtWidth - this.getWidth()) - margin);
+        this.setPx(randomNum(getWidth() / 2 + margin, this.courtWidth - this.getWidth()) - margin);
         this.setPy(
-                RandomNum(getHeight() / 2 + margin, this.courtHeight - this.getHeight() - margin)
+                randomNum(getHeight() / 2 + margin, this.courtHeight - this.getHeight() - margin)
         );
     }
 }

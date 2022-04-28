@@ -228,6 +228,7 @@ public class SnakeTest {
         testMoveHelper(snake, null, null);
         assertEquals(90, snake.getPx());
     }
+
     // If changing direction and moving after hitting wall
     @Test
     public void testWallBumpChangeDirectionThenMove() {
